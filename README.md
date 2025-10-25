@@ -24,7 +24,7 @@ You can now use `bluecave:report` after you run your tests to analyze and report
 export BLUECAVE_TOKEN="<your project token>" # Please keep this a secret!
 # The following is only required if running outside of GitHub Actions:
 # export BLUECAVE_EXTRA_OPTS="-b <branch name, such as main> -c <commit hash to attribute this analysis to>"
-# See https://docs.bluecave.io/languages/java/ for more information. 
+# See https://docs.bluecave.io/ci/ for more information. 
 ./mvnw test
 ./mvnw bluecave:report
 ```
