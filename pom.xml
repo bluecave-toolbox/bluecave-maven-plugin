@@ -4,7 +4,7 @@
 
     <groupId>io.bluecave</groupId>
     <artifactId>bluecave-maven-plugin</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 
     <name>Blue Cave Maven Plugin</name>
     <description>A Maven plugin that provides a wrapper for Blue Cave's CLI, making it easier to integrate Blue Cave
@@ -123,6 +123,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.2.8</version>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                    <keyname>${env.GPG_KEY_ID}</keyname>
+                    <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign</id>

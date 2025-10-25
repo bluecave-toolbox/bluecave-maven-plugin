@@ -1,0 +1,44 @@
+name: Publish to Maven Central
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build
+      run: ./mvnw test
+
+    - name: Import GPG key
+      run: |
+        mkdir -p ~/.gnupg
+        echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+        echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
+        gpgconf --kill gpg-agent
+        echo "$GPG_KEY" | base64 -d | gpg --batch --import
+        echo "$GPG_KEY_ID" | gpg --import-ownertrust
+      env:
+        GPG_KEY: ${{ secrets.GPG_KEY }}
+        GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+
+    - name: Publish to Maven Central
+      run: ./mvnw -s settings.xml clean deploy
+      env:
+        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
