@@ -18,8 +18,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: ./mvnw test
+      run: ./mvnw -B test
     - name: Analyze and Report Coverage to Blue Cave
       env:
         BLUECAVE_TOKEN: ${{ secrets.BLUECAVE_TOKEN }}
-      run: ./mvnw bluecave:report
+      run: ./mvnw -B bluecave:report
