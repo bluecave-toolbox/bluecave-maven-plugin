@@ -1,5 +1,7 @@
 # Maven Plugin for Blue Cave
 
+[![Code Quality](https://cloud.bluecave.io/badges/gh/bluecave-toolbox/bluecave-maven-plugin/analysis.svg)](https://cloud.bluecave.io/projects/gh/bluecave-toolbox/bluecave-maven-plugin)
+[![Coverage](https://cloud.bluecave.io/badges/gh/bluecave-toolbox/bluecave-maven-plugin/coverage.svg)](https://cloud.bluecave.io/projects/gh/bluecave-toolbox/bluecave-maven-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A Maven plugin that provides a wrapper for Blue Cave's CLI, making it easier to integrate Blue Cave
