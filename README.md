@@ -15,7 +15,7 @@ Add the plugin to your `pom.xml` file:
         <plugin>
             <groupId>io.bluecave</groupId>
             <artifactId>bluecave-maven-plugin</artifactId>
-            <version>0.1.1</version>
+            <version>0.1.2</version>
         </plugin>
     </plugins>
 </build>
