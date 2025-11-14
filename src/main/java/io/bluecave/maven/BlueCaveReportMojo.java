@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,13 +25,13 @@ public class BlueCaveReportMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         try {
-            final var modules = Optional.ofNullable(project.getCollectedProjects())
-                    .filter(list -> !list.isEmpty()).orElse(List.of(project));
+            final List<MavenProject> modules = Optional.ofNullable(project.getCollectedProjects())
+                    .filter(list -> !list.isEmpty()).orElse(new ArrayList<>(Collections.singletonList(project)));
 
-            final var sources = new ArrayList<String>();
-            final var classes = new ArrayList<String>();
+            final List<String> sources = new ArrayList<String>();
+            final List<String> classes = new ArrayList<String>();
 
-            final var basePath = project.getBasedir().getAbsolutePath() + File.separator;
+            final String basePath = project.getBasedir().getAbsolutePath() + File.separator;
 
             for (MavenProject module : modules) {
                 for (String source : module.getCompileSourceRoots()) {
@@ -47,7 +48,7 @@ public class BlueCaveReportMojo extends AbstractMojo {
             sources.removeIf(s -> !new File(basePath + s).isDirectory());
             classes.removeIf(s -> !new File(basePath + s).isDirectory());
 
-            var command = "./bluecave -l java"
+            String command = "./bluecave -l java"
                     + " -s " + String.join(" -s ", sources)
                     + " -x " + String.join(" -x ", classes);
 
@@ -64,18 +65,18 @@ public class BlueCaveReportMojo extends AbstractMojo {
 
     private void runCommand(String command) throws IOException, InterruptedException {
         getLog().info("Running: " + command);
-        var process = new ProcessBuilder("bash", "-c", command)
+        Process process = new ProcessBuilder("bash", "-c", command)
                 .redirectErrorStream(true)
                 .start();
 
-        try (var in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = in.readLine()) != null) {
                 getLog().info(line);
             }
         }
 
-        var exit = process.waitFor();
+        int exit = process.waitFor();
         if (exit != 0) {
             throw new IOException("Command failed with exit code " + exit);
         }
