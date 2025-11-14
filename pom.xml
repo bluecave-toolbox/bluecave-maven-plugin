@@ -4,7 +4,7 @@
 
     <groupId>io.bluecave</groupId>
     <artifactId>bluecave-maven-plugin</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 
     <name>Blue Cave Maven Plugin</name>
     <description>A Maven plugin that provides a wrapper for Blue Cave's CLI, making it easier to integrate Blue Cave
