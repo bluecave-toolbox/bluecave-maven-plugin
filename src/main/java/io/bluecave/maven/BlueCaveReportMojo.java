@@ -22,10 +22,9 @@ public class BlueCaveReportMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
-    private static final String UNUSED_VARIABLE_FOR_DOG_FEEDING = null;
-
     @Override
     public void execute() throws MojoExecutionException {
+        final String unusedVariableForDogFeeding = null;
         try {
             final List<MavenProject> modules = Optional.ofNullable(project.getCollectedProjects())
                     .filter(list -> !list.isEmpty()).orElse(new ArrayList<>(Collections.singletonList(project)));
