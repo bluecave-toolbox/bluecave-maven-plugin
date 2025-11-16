@@ -28,8 +28,9 @@ public class BlueCaveReportMojo extends AbstractMojo {
             final List<MavenProject> modules = Optional.ofNullable(project.getCollectedProjects())
                     .filter(list -> !list.isEmpty()).orElse(new ArrayList<>(Collections.singletonList(project)));
 
-            final List<String> sources = new ArrayList<String>();
-            final List<String> classes = new ArrayList<String>();
+            final List<String> sources = new ArrayList<>();
+            final List<String> classes = new ArrayList<>();
+            final List<String> jacocoXmlPaths = new ArrayList<>();
 
             final String basePath = project.getBasedir().getAbsolutePath() + File.separator;
 
@@ -43,14 +44,23 @@ public class BlueCaveReportMojo extends AbstractMojo {
                 }
 
                 classes.add(module.getBuild().getOutputDirectory().replace(basePath, ""));
+                jacocoXmlPaths.add((module.getBasedir().getAbsolutePath()
+                        + "/target/site/jacoco/jacoco.xml").replace(basePath, ""));
             }
 
-            sources.removeIf(s -> !new File(basePath + s).isDirectory());
-            classes.removeIf(s -> !new File(basePath + s).isDirectory());
+            //noinspection unchecked
+            for (List<String> fileList : new List[]{sources, classes, jacocoXmlPaths}) {
+                fileList.removeIf(s -> !new File(basePath + s).exists());
+            }
 
-            String command = "./bluecave -l java"
-                    + " -s " + String.join(" -s ", sources)
-                    + " -x " + String.join(" -x ", classes);
+            String command = "./bluecave -l java" + " -s " + String.join(" -s ", sources);
+
+            if (!classes.isEmpty()) {
+                command += " -x " + String.join(" -x ", classes);
+            }
+            if (!jacocoXmlPaths.isEmpty()) {
+                command += " -j " + String.join(" -j ", jacocoXmlPaths);
+            }
 
             if (System.getenv("BLUECAVE_EXTRA_OPTS") != null) {
                 command += " " + System.getenv("BLUECAVE_EXTRA_OPTS");
